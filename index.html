@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Study Helper – AI Roadmap & Flashcards</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0f1f;--card:rgba(255,255,255,.06);--line:rgba(255,255,255,.12);--txt:#eef2ff;--mut:#98a2c3;--a1:#6366f1;--a2:#22d3ee;--ok:#34d399;--bad:#f87171}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,system-ui,sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;
+background-image:radial-gradient(600px 300px at 10% -5%,rgba(99,102,241,.35),transparent),radial-gradient(500px 300px at 100% 10%,rgba(34,211,238,.22),transparent)}
+.wrap{max-width:720px;margin:0 auto;padding:22px 16px 40px}
+.hero{text-align:center;padding:14px 0 18px}
+.badge{display:inline-block;font-size:12px;font-weight:600;padding:5px 12px;border-radius:99px;background:rgba(99,102,241,.18);color:#c7d2fe;border:1px solid rgba(99,102,241,.4)}
+h1{font-size:30px;line-height:1.15;margin:12px 0 8px;font-weight:800;letter-spacing:-.5px}
+h1 span{background:linear-gradient(90deg,var(--a1),var(--a2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{color:var(--mut);font-size:15px;margin:0}
+.tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;background:var(--card);border:1px solid var(--line);padding:5px;border-radius:14px;margin:18px 0}
+.tabs button{border:0;background:transparent;color:var(--mut);padding:12px;border-radius:10px;font:600 15px Inter,sans-serif;cursor:pointer;transition:.2s}
+.tabs button.on{background:linear-gradient(135deg,var(--a1),#4f46e5);color:#fff;box-shadow:0 6px 20px rgba(99,102,241,.4)}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;backdrop-filter:blur(8px)}
+label.l{display:block;font-size:13px;font-weight:600;color:var(--mut);margin:14px 0 6px}
+input,select{width:100%;padding:13px 14px;border-radius:12px;border:1px solid var(--line);background:rgba(0,0,0,.28);color:var(--txt);font:500 16px Inter,sans-serif;outline:none;transition:.2s}
+input:focus,select:focus{border-color:var(--a1);box-shadow:0 0 0 3px rgba(99,102,241,.25)}
+select option{background:#111827}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.sr{display:grid;grid-template-columns:34px 1fr 108px;gap:8px;align-items:start;margin-bottom:10px}
+.sr .num{margin-top:7px}
+.sr .so{margin-top:6px}
+.num{width:34px;height:34px;border-radius:10px;background:rgba(99,102,241,.2);color:#c7d2fe;display:grid;place-items:center;font-weight:700;font-size:14px}
+.btn{width:100%;margin-top:18px;padding:15px;border:0;border-radius:12px;color:#fff;font:700 16px Inter,sans-serif;cursor:pointer;background:linear-gradient(135deg,var(--a1),#4f46e5 60%,#0891b2);box-shadow:0 8px 24px rgba(79,70,229,.4);transition:.2s}
+.btn:active{transform:scale(.98)}
+.btn:disabled{opacity:.55}
+.btn.sec{background:rgba(255,255,255,.08);box-shadow:none;border:1px solid var(--line);margin-top:10px}
+.hide{display:none!important}
+.drop{display:block;border:2px dashed rgba(129,140,248,.55);border-radius:16px;padding:26px 14px;text-align:center;cursor:pointer;background:rgba(99,102,241,.06);transition:.2s}
+.drop:active{background:rgba(99,102,241,.15)}
+.drop .ic{font-size:36px}
+.drop b{display:block;margin-top:6px;font-size:16px}
+.drop small{color:var(--mut)}
+.limit{display:inline-block;margin-top:10px;font-size:12px;font-weight:700;padding:4px 10px;border-radius:99px;background:rgba(251,191,36,.15);color:#fcd34d;border:1px solid rgba(251,191,36,.4)}
+.file{display:flex;align-items:center;gap:10px;margin-top:12px;padding:10px 12px;border-radius:12px;background:rgba(0,0,0,.28);border:1px solid var(--line);font-size:14px}
+.file.bad{border-color:var(--bad);color:#fecaca}
+.file .nm{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.file button{background:none;border:0;color:var(--mut);font-size:18px;cursor:pointer}
+.result{margin-top:18px;display:none}
+.loader{display:flex;align-items:center;gap:12px;padding:18px;border-radius:14px;background:var(--card);border:1px solid var(--line);color:var(--mut)}
+.spin{width:22px;height:22px;border-radius:50%;border:3px solid rgba(255,255,255,.15);border-top-color:var(--a2);animation:s .8s linear infinite}
+@keyframes s{to{transform:rotate(360deg)}}
+.msg{padding:14px;border-radius:12px;background:rgba(248,113,113,.12);border:1px solid rgba(248,113,113,.4);color:#fecaca;white-space:pre-wrap}
+.rh{margin:0 0 4px;font-size:22px;font-weight:800}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}
+.stat{background:rgba(0,0,0,.28);border:1px solid var(--line);border-radius:12px;padding:10px;text-align:center}
+.stat b{display:block;font-size:20px;color:var(--a2)}
+.stat span{font-size:11px;color:var(--mut)}
+.body h3{font-size:17px;margin:20px 0 6px;color:#c7d2fe;padding-left:10px;border-left:3px solid var(--a1)}
+.body h4{font-size:15px;margin:14px 0 4px;color:var(--a2)}
+.body p{margin:6px 0;line-height:1.65;color:#dbe1f7}
+.body ul{margin:6px 0;padding-left:20px}
+.body li{margin:4px 0;line-height:1.6;color:#dbe1f7}
+.card{background:rgba(0,0,0,.28);border:1px solid var(--line);border-radius:14px;padding:14px;margin:10px 0;cursor:pointer;transition:.2s;break-inside:avoid}
+.card:active{transform:scale(.99)}
+.card .q{font-weight:600;line-height:1.5}
+.card .q i{font-style:normal;display:inline-block;min-width:26px;height:26px;line-height:26px;text-align:center;border-radius:8px;background:rgba(99,102,241,.25);color:#c7d2fe;font-size:12px;margin-right:8px}
+.card .a{display:none;margin-top:10px;padding-top:10px;border-top:1px dashed var(--line);color:#7dd3fc;line-height:1.6}
+.card.open .a{display:block}
+.card .tap{font-size:11px;color:var(--mut);margin-top:8px}
+.card.open .tap{display:none}
+.hint{font-size:12px;color:var(--mut);text-align:center;margin-top:8px}
+.foot{text-align:center;color:var(--mut);font-size:12px;margin-top:22px}
+@media print{
+  body{background:#fff!important}
+  body *{visibility:hidden}
+  .printing,.printing *{visibility:visible}
+  .printing{position:absolute;left:0;top:0;width:100%;color:#000!important}
+  .printing *{color:#000!important;background:transparent!important;border-color:#bbb!important}
+  .printing .card{border:1px solid #999!important}
+  .printing .a{display:block!important;color:#0b4a8f!important}
+  .printing .tap{display:none!important}
+  .printing .stat b{color:#000!important}
+  .noprint{display:none!important}
+}
+@media(max-width:380px){.sr{grid-template-columns:30px 1fr 96px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="hero">
+    <span class="badge">✨ AI Powered • Free</span>
+    <h1>Padhai ko banao <span>smart</span></h1>
+    <p class="sub">Personal study roadmap aur chapter ke instant flashcards, ek jagah.</p>
+  </div>
+
+  <div class="tabs">
+    <button id="t1" class="on" onclick="tab(1)">🗓️ Study Roadmap</button>
+    <button id="t2" onclick="tab(2)">🃏 Flashcards</button>
+  </div>
+
+  <div id="s1" class="panel">
+    <label class="l">Tumhara naam</label>
+    <input id="name" placeholder="Jaise: Ravi">
+    <div class="g2">
+      <div><label class="l">Exam me kitne din bache?</label><input id="days" type="number" inputmode="numeric" placeholder="jaise 60"></div>
+      <div><label class="l">Roz kitne ghante?</label><input id="hours" type="number" step="0.5" inputmode="decimal" placeholder="jaise 4"></div>
+    </div>
+    <label class="l">Kitne subjects hain?</label>
+    <select id="n"></select>
+    <label class="l">Har subject chuno aur chapters select karo</label>
+    <div id="subs"></div>
+    <button class="btn" id="b1">🚀 Roadmap banao</button>
+    <div id="r1" class="result"></div>
+    <button class="btn sec noprint hide" id="d1" onclick="pdf('r1')">⬇️ PDF download karo</button>
+    <div class="hint noprint hide" id="h1">Print screen me <b>"Save as PDF"</b> chuno, phir download dabao.</div>
+  </div>
+
+  <div id="s2" class="panel hide">
+    <label class="drop">
+      <input id="pdf" type="file" accept="application/pdf" class="hide">
+      <div class="ic">📄</div>
+      <b>Chapter ka PDF chuno</b>
+      <small>Yaha tap karke file select karo</small><br>
+      <span class="limit">⚠️ Max file size: 3 MB</span>
+    </label>
+    <div id="fileinfo"></div>
+    <div class="g2">
+      <div><label class="l">Kitne flashcards?</label>
+        <select id="cnt"><option value="15">15 cards</option><option value="25" selected>25 cards</option><option value="40">40 cards</option></select></div>
+      <div><label class="l">Bhasha</label>
+        <select id="lang"><option>Hinglish</option><option>Hindi</option><option>English</option></select></div>
+    </div>
+    <button class="btn" id="b2">⚡ Flashcards banao</button>
+    <div id="r2" class="result"></div>
+    <button class="btn sec noprint hide" id="tg" onclick="toggleAll()">👁️ Sab jawab dikhao / chhupao</button>
+    <button class="btn sec noprint hide" id="d2" onclick="pdf('r2')">⬇️ PDF download karo</button>
+    <div class="hint noprint hide" id="h2">Print screen me <b>"Save as PDF"</b> chuno, phir download dabao.</div>
+  </div>
+
+  <div class="foot">AI kabhi galti kar sakta hai, zaroori cheezein book se ek baar check kar lo.</div>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const MAX=3*1024*1024;
+let pdfFile=null;
+
+const SUBJECTS=['Maths','Physics','Chemistry','Biology','English','Hindi','Science','Social Science','History','Geography','Reasoning','GK / Current Affairs','Computer'];
+const subjOpts='<option value="" disabled selected>Subject chuno</option>'
+  +SUBJECTS.map(s=>`<option value="${s}">${s}</option>`).join('')
+  +'<option value="__other">✏️ Other (khud likho)</option>';
+const chapOpts='<option value="" disabled selected>Chapters</option>'
+  +Array.from({length:40},(_,i)=>`<option value="${i+1}">${i+1}</option>`).join('');
+
+$('n').innerHTML=Array.from({length:12},(_,i)=>`<option value="${i+1}"${i===2?' selected':''}>${i+1} subject${i?'s':''}</option>`).join('');
+
+function tab(n){
+  $('s1').classList.toggle('hide',n!==1);$('s2').classList.toggle('hide',n!==2);
+  $('t1').classList.toggle('on',n===1);$('t2').classList.toggle('on',n===2);
+}
+
+function buildSubs(){
+  const old=[...document.querySelectorAll('.sr')].map(r=>({
+    s:r.querySelector('.sn').value,o:r.querySelector('.so').value,c:r.querySelector('.sc').value
+  }));
+  const n=parseInt($('n').value)||1;
+  let h='';
+  for(let i=0;i<n;i++) h+=`<div class="sr"><div class="num">${i+1}</div><div><select class="sn">${subjOpts}</select><input class="so hide" placeholder="Subject ka naam likho"></div><select class="sc">${chapOpts}</select></div>`;
+  $('subs').innerHTML=h;
+  document.querySelectorAll('.sr').forEach((r,i)=>{
+    const sn=r.querySelector('.sn'),so=r.querySelector('.so'),sc=r.querySelector('.sc');
+    if(old[i]){
+      if(old[i].s)sn.value=old[i].s;
+      so.value=old[i].o;
+      if(old[i].c)sc.value=old[i].c;
+    }
+    so.classList.toggle('hide',sn.value!=='__other');
+    sn.onchange=()=>{
+      so.classList.toggle('hide',sn.value!=='__other');
+      if(sn.value==='__other')so.focus();
+    };
+  });
+}
+$('n').onchange=buildSubs;buildSubs();
+
+function pdf(id){
+  document.querySelectorAll('.result').forEach(e=>e.classList.remove('printing'));
+  $(id).classList.add('printing');
+  window.print();
+}
+function loading(el,msg){el.style.display='block';el.innerHTML=`<div class="loader"><div class="spin"></div><div>${msg}</div></div>`;}
+function fail(el,msg){el.style.display='block';el.innerHTML='';const d=document.createElement('div');d.className='msg';d.textContent=msg;el.appendChild(d);}
+async function call(payload){
+  const r=await fetch('/api/ai',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+  return r.json();
+}
+
+/* simple, safe formatter for roadmap text */
+function inline(el,str){
+  str.split(/\*\*(.+?)\*\*/g).forEach((p,i)=>{
+    if(!p)return;
+    if(i%2){const s=document.createElement('strong');s.textContent=p;el.appendChild(s);}
+    else el.appendChild(document.createTextNode(p.replace(/\*/g,'')));
+  });
+}
+function format(text){
+  const box=document.createElement('div');box.className='body';
+  let ul=null;
+  text.split('\n').forEach(raw=>{
+    const line=raw.trim();
+    if(!line){ul=null;return;}
+    let m;
+    if(/^[-*•]\s+/.test(line)){
+      if(!ul){ul=document.createElement('ul');box.appendChild(ul);}
+      const li=document.createElement('li');inline(li,line.replace(/^[-*•]\s+/,''));ul.appendChild(li);return;
+    }
+    ul=null;
+    let el;
+    if((m=line.match(/^#{1,4}\s+(.*)/))){el=document.createElement('h3');inline(el,m[1]);}
+    else if(/^\*\*[^*]+\*\*:?$/.test(line)||(/^\d+\.\s/.test(line)&&line.length<70)){el=document.createElement('h3');inline(el,line);}
+    else if(/^(week|hafta|din|day)\s*\d+/i.test(line)&&line.length<80){el=document.createElement('h4');inline(el,line);}
+    else{el=document.createElement('p');inline(el,line);}
+    box.appendChild(el);
+  });
+  return box;
+}
+
+$('b1').onclick=async()=>{
+  const subjects=[...document.querySelectorAll('.sr')].map(r=>{
+    const s=r.querySelector('.sn').value;
+    const name=s==='__other'?r.querySelector('.so').value.trim():s;
+    return {name,chapters:parseInt(r.querySelector('.sc').value)||0};
+  }).filter(s=>s.name&&s.chapters>0);
+  const days=parseInt($('days').value),hours=parseFloat($('hours').value);
+  const out=$('r1');
+  if(!days||!hours||!subjects.length){fail(out,'Din, roz ke ghante bharo aur kam se kam ek subject + uske chapters select karo.');return;}
+  const nm=$('name').value.trim()||'Student';
+  $('b1').disabled=true;$('d1').classList.add('hide');$('h1').classList.add('hide');
+  loading(out,'Tumhara roadmap ban raha hai...');
+  try{
+    const d=await call({mode:'roadmap',name:nm,days,hours,subjects});
+    if(!d.text){fail(out,d.error||'Kuch gadbad hui, dobara try karo.');}
+    else{
+      out.innerHTML='';
+      const h=document.createElement('h2');h.className='rh';h.textContent='📘 '+nm+' ka Study Roadmap';
+      const total=subjects.reduce((a,s)=>a+s.chapters,0);
+      const st=document.createElement('div');st.className='stats';
+      st.innerHTML=`<div class="stat"><b>${days}</b><span>din bache</span></div><div class="stat"><b>${Math.round(days*hours)}</b><span>total ghante</span></div><div class="stat"><b>${total}</b><span>chapters</span></div>`;
+      out.append(h,st,format(d.text));
+      $('d1').classList.remove('hide');$('h1').classList.remove('hide');
+    }
+  }catch(e){fail(out,'Error aaya, dobara try karo.');}
+  $('b1').disabled=false;
+};
+
+$('pdf').onchange=e=>{
+  const f=e.target.files[0];const box=$('fileinfo');box.innerHTML='';pdfFile=null;
+  if(!f)return;
+  const mb=(f.size/1048576).toFixed(2);
+  const d=document.createElement('div');d.className='file';
+  const nm=document.createElement('div');nm.className='nm';
+  if(f.size>MAX){d.classList.add('bad');nm.textContent=`❌ ${f.name} (${mb} MB) – 3 MB se badi hai. Chhota PDF chuno.`;}
+  else{pdfFile=f;nm.textContent=`✅ ${f.name} (${mb} MB)`;}
+  const x=document.createElement('button');x.textContent='✕';x.onclick=()=>{box.innerHTML='';pdfFile=null;$('pdf').value='';};
+  d.append(nm,x);box.appendChild(d);
+};
+
+let allOpen=false;
+function toggleAll(){allOpen=!allOpen;document.querySelectorAll('#r2 .card').forEach(c=>c.classList.toggle('open',allOpen));}
+
+$('b2').onclick=async()=>{
+  const out=$('r2');
+  if(!pdfFile){fail(out,'Pehle 3 MB se chhota PDF chuno.');return;}
+  $('b2').disabled=true;['d2','tg','h2'].forEach(i=>$(i).classList.add('hide'));
+  loading(out,'PDF padh raha hai... 20-40 second lag sakte hain');
+  try{
+    const b64=await new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result.split(',')[1]);r.onerror=rej;r.readAsDataURL(pdfFile);});
+    const d=await call({mode:'flashcards',pdf:b64,count:$('cnt').value,lang:$('lang').value});
+    if(d.cards&&d.cards.length){
+      out.innerHTML='';allOpen=false;
+      const h=document.createElement('h2');h.className='rh';h.textContent='🃏 Flashcards ('+d.cards.length+')';
+      out.appendChild(h);
+      d.cards.forEach((c,i)=>{
+        const el=document.createElement('div');el.className='card';
+        const q=document.createElement('div');q.className='q';
+        const ix=document.createElement('i');ix.textContent=i+1;
+        q.append(ix,document.createTextNode(c.q));
+        const a=document.createElement('div');a.className='a';a.textContent=c.a;
+        const t=document.createElement('div');t.className='tap';t.textContent='Jawab dekhne ke liye tap karo';
+        el.append(q,a,t);el.onclick=()=>el.classList.toggle('open');out.appendChild(el);
+      });
+      ['d2','tg','h2'].forEach(i=>$(i).classList.remove('hide'));
+    }else fail(out,d.error||'Flashcards nahi ban paye, dobara try karo.');
+  }catch(e){fail(out,'Error aaya, dobara try karo.');}
+  $('b2').disabled=false;
+};
+</script>
+</body>
+  </html>
